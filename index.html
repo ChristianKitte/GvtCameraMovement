@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>EA 4</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+
+<div id="layout">
+    <div id="caption">
+        <h1>EA 4 - Eingefärbte Flächen</h1>
+        <h4>Im Rahmen der vierten Einsendeaufgabe sollen zunächst zusammenhängende Flächen als Gitter (Linien),
+            zusätzlich später mit kolorierten Flächen erzeugt und mittels WebGL dargestellt werden.</h4>
+
+        <p>Über die drei Buttons können drei verschiedene Modelle zur Anzeige gebracht werden. Über die Checkbox kann
+            gesteuert werden, ob das jeweilige Modell mit einer Fläche oder nur als Gittermodell angezeigt werden
+            soll. Der gesamte Code kann auf
+            <a href="https://github.com/ChristianKitte/GvtFilledAreas" target="_blank">
+                GitHub eingesehen werden
+            </a>.
+        </p>
+
+        <p>Bei der Ausführung kann es zu Wartezeiten kommen, bis die Modelle durchgerechnet und zur Anzeige gebracht
+            werden. Insbesondere werden CULL_FACE und DEPTH_TEST eingesetzt, um Fragmente nur anzuzeigen, wenn ihre
+            Vorderseite sichtbar ist, oder sie verdeckt sind. Zur Anwendung kommt hier CW (ClockWise). Um trotz der
+            farbigen Vertices, wie sie für die Farbe der Fragmente notwendig sind, schwarze Linien zu erhalten, wurde
+            vor deren Ausgabe das entsprechende Farbattribut disabled.
+        </p>
+    </div>
+
+    <div id="buttonBar">
+        <button id="figure1" class="btn btn-primary">Schnecke</button>
+        <button id="figure2" class="btn btn-primary">Whitney Umbrella</button>
+        <button id="figure3" class="btn btn-primary">Zahnrad</button>
+        <p>Die Berechnung kann etwas Zeit in Anspruch nehmen</p>
+        <p id="info_text">Aktuell wird die Figur x angezeigt</p>
+        <a id="info_link" target="_blank">(Quelle)</a>
+    </div>
+
+    <div id="checkBox">
+        <input type="checkbox" id="show_line" name="show_line" value="1" checked="checked">
+        <label for="show_line">Linien anzeigen</label>
+    </div>
+
+    <canvas id="canvas" width="1000px" height="1000px"></canvas>
+</div>
+
+<script src="script/extendedvertexarray.js"></script>
+<script src="script/verticespointsbuilder.js"></script>
+<script src="script/shader.js"></script>
+<script src="script/webglconfig.js"></script>
+<script src="script/configure.js"></script>
+<script src="script/main.js" type="text/javascript"></script>
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+</html>
