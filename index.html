@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>EA 4</title>
+    <title>EA 5</title>
 
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -15,23 +15,22 @@
 
 <div id="layout">
     <div id="caption">
-        <h1>EA 4 - Eingefärbte Flächen</h1>
-        <h4>Im Rahmen der vierten Einsendeaufgabe sollen zunächst zusammenhängende Flächen als Gitter (Linien),
-            zusätzlich später mit kolorierten Flächen erzeugt und mittels WebGL dargestellt werden.</h4>
+        <h1>EA 5 - Kamerabewegung</h1>
+        <h4>Im Rahmen der fünften Einsendeaufgabe sollen zunächst zwei Grundkörper, sowie eine rekursive Kugel
+            erstellt werden. Die Tiefe der Rekursion soll frei einstellbar, die Darstellung der Linien
+            optional sein.</h4>
 
-        <p>Über die drei Buttons können drei verschiedene Modelle zur Anzeige gebracht werden. Über die Checkbox kann
-            gesteuert werden, ob das jeweilige Modell mit einer Fläche oder nur als Gittermodell angezeigt werden
-            soll. Der gesamte Code kann auf
-            <a href="https://github.com/ChristianKitte/GvtFilledAreas" target="_blank">
+        <p>Die Körper sollen frei betrachtet werden können. Hierzu kann mit der Pfeiltasten die Kamera kreisen. Mit
+            den WASD Tasten kann die Kamera in XY Richtung bewegt werden. Mit der N (Shift-N) Taste kann die
+            Entfernung der Kamera eingestellt werden. Der gesamte Code kann auf
+            <a href="https://github.com/ChristianKitte/GvtCameraMovement" target="_blank">
                 GitHub eingesehen werden
             </a>.
         </p>
 
-        <p>Bei der Ausführung kann es zu Wartezeiten kommen, bis die Modelle durchgerechnet und zur Anzeige gebracht
-            werden. Insbesondere werden CULL_FACE und DEPTH_TEST eingesetzt, um Fragmente nur anzuzeigen, wenn ihre
-            Vorderseite sichtbar ist, oder sie verdeckt sind. Zur Anwendung kommt hier CW (ClockWise). Um trotz der
-            farbigen Vertices, wie sie für die Farbe der Fragmente notwendig sind, schwarze Linien zu erhalten, wurde
-            vor deren Ausgabe das entsprechende Farbattribut disabled.
+        <p>
+            Mit Hilfe des Button "Reset" kann der Anfangszustand wiederhergestellt werden. Über die Checkbox kann
+            die Anzeige der Linien gesteuert werden.
         </p>
     </div>
 
