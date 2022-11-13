@@ -67,7 +67,7 @@ function iniWebGLApp() {
 
     // Polygon offset of rastered Fragments.
     gl.enable(gl.POLYGON_OFFSET_FILL);
-    gl.polygonOffset(0, 0);
+    gl.polygonOffset(1, 1);
 
     gl.useProgram(program);
 

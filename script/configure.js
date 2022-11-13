@@ -45,32 +45,28 @@ function setInfoText() {
     document.getElementById("figure1").classList.remove("btn-success");
     document.getElementById("figure2").classList.remove("btn-success");
     document.getElementById("figure3").classList.remove("btn-success");
+    document.getElementById("figure4").classList.remove("btn-success");
 
     switch (activeModel) {
         case 1:
             // code block
-            // http://www.3d-meier.de/tut3/Seite17.html
-            infoText.innerText = "Aktuell wird die Figur 1 (Schnecke) angezeigt";
+            infoText.innerText = "Aktuell wird die Figur 1 (Zylinder) angezeigt";
             document.getElementById("figure1").classList.add("btn-success");
-            infoLink.href = "http://www.3d-meier.de/tut3/Seite17.html";
-            infoLink.style.visibility="visible";
-            infoLink.innerText="(Basis)";
             break;
         case 2:
             // code block
-            // http://www.3d-meier.de/tut3/Seite22.html
-            infoText.innerText = "Aktuell wird die Figur 2 (Whitney Umbrella) angezeigt";
+            infoText.innerText = "Aktuell wird die Figur 2 (Kegel) angezeigt";
             document.getElementById("figure2").classList.add("btn-success");
-            infoLink.href = "http://www.3d-meier.de/tut3/Seite22.html";
-            infoLink.style.visibility="visible";
-            infoLink.innerText="(Basis)";
             break;
         case 3:
             // code block
-            // Basiert auf dem Spinnennetz
-            infoText.innerText = "Aktuell wird die Figur 3 (Zahnrad) angezeigt";
+            infoText.innerText = "Aktuell wird die Figur 3 (Kugel) angezeigt";
             document.getElementById("figure3").classList.add("btn-success");
-            infoLink.style.visibility="hidden";
+            break;
+        case 4:
+            // code block
+            infoText.innerText = "Aktuell wird die Figur 4 (Torus) angezeigt";
+            document.getElementById("figure4").classList.add("btn-success");
             break;
     }
 }
@@ -102,4 +98,11 @@ document.getElementById("figure3").onclick = () => {
     RefreshWaves(activeModel);
 }
 
-
+/**
+ * Zeigt die 4.Figur an
+ */
+document.getElementById("figure4").onclick = () => {
+    activeModel = 4;
+    setInfoText();
+    RefreshWaves(activeModel);
+}

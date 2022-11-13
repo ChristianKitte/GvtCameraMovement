@@ -1,4 +1,10 @@
 /**
+ * Zur vereinfachten Nutzung und als kleine Optimierung
+ * @type {number} Die Zahl PI aus Math.PI
+ */
+const pi = Math.PI;
+
+/**
  * Hilfsfuktion zum Berechnen der Sinuswerte auf Basis von Grad
  * @param degree zu berechnender Grad
  * @param y_scale die zu verwendende Skalierung der Amplitude
@@ -21,156 +27,129 @@ function cosinusFromDegree(degree, y_scale) {
 }
 
 /**
- * Baut die Vertices Array für die Figur 1 auf Basis enes Modells auf
- * basiert auf http://www.3d-meier.de/tut3/Seite17.html
+ * Fügt auf Basis der übergebenen Parameter zwei Linien und zwei Dreiecke
+ * den entsprechenden Arrays hinzu
+ * @param i Zähler Schleife i
+ * @param j Zähler Schleife j
+ * @param iVertex Nummer des Knoten
+ * @param stepV Schrittweite für Schleife j
+ */
+function addElements(i, j, iVertex, stepV) {
+    // Define index for one Line
+    if (i > 0 && j > 0) { // Radien
+        pushIndexLine(iVertex - 1);
+        pushIndexLine(iVertex);
+    }
+    if (i > 0 && j > 0) { // Ring
+        pushIndexLine(iVertex - (stepV + 1));
+        pushIndexLine(iVertex);
+    }
+
+    // Define index for two triangles.
+    if (j > 0 && i > 0) {
+        pushIndexTriangle(iVertex);
+        pushIndexTriangle(iVertex - 1);
+        pushIndexTriangle(iVertex - (stepV + 1));
+        //
+        pushIndexTriangle(iVertex - 1);
+        pushIndexTriangle(iVertex - (stepV + 1) - 1);
+        pushIndexTriangle(iVertex - (stepV + 1));
+    }
+}
+
+/**
+ * Zylinder
  */
 function getFigure1VerticesPointsArray() {
     vertices = new Float32Array([]);
     verticesIndexLine = new Uint16Array([]);
     verticesIndexTriangle = new Uint16Array([]);
 
-    // a Durchmesser
-    let a = 1.0;
-    // b reelle Zahl mit b<a
-    let b = 4.0;
+    // Parameter Winkel/Grad
+    let stepU = 32
+    let du = 2 * pi / stepU;
 
-    //u ist Element aus der Zahlenmenge [0, 6 pi]
-    let uMax = 4.0 * Math.PI;
-    let stepU = 30.0;
-    let du = uMax / stepU;
+    // Parameter Höhe
+    let stepV = 16;
+    let dv = 1 / stepV;
 
-    //v ist Element aus der Zahlenmenge [0, 2 pi]
-    let vMax = 2.0 * Math.PI;
-    let stepV = 30.0
-    let dv = vMax / stepV;
+    let r = 0.6;
+    let scale = 300.0;
 
-    // Farbwerte
-    let R = 1.0;
-    let G = 0.0;
-    let B = 0.0;
+    for (let u = 0.0, i = 0; i <= stepU; u += du, i++) { // Winkel / Kreis
+        for (let v = 0.0, j = 0; j <= stepV; v += dv, j++) { // Höhe
+            let iVertex = i * (stepV + 1) + j; // ==> Anzahl der Knoten
 
-    for (let u = 0.0, i = 0; i <= stepU; u += du, i++) {
-        let h = Math.exp(u / (6.0 * Math.PI));
+            let x = r * Math.cos(u);
+            let y = v - 0.5;
+            let z = r * Math.sin(u);
 
-        for (let v = 0.0, j = 0; j <= stepV; v += dv, j++) {
-            let iVertex = j * (stepV + 1) + i; // ==> Anzahl der Knoten
-
-            let x = a * (1.0 - h) * Math.cos(u) * Math.cos(0.5 * v) * Math.cos(0.5 * v);
-            let y = 1.0 - Math.exp(u / (b * Math.PI)) - Math.sin(v) + h * Math.sin(v);
-            let z = a * (-1.0 + h) * Math.sin(u) * Math.cos(0.5 * v) * Math.cos(0.5 * v);
-
-            // define vertices
-            pushVertices(x * 100.0); // X Koordinate
-            pushVertices(y * 100.0); // Y Koordinate
-            pushVertices(z * 100.0); // Z Koordinate
-
-            pushVertices(R, G, B, 1.0); // Farbwert
-
-            R -= 1.0 / (stepU * stepV);
-            G += 1.0 / (stepU * stepV);
-
-            // Define index for one Line
-            if (i > 0 && j >= 0) { // Tiefe
-                pushIndexLine(iVertex - 1); // ==> Es reicht der 1 Eintrag des Knoten !!!
-                pushIndexLine(iVertex);
-            }
-            if (i > 0 && j >= 0) { // Kreise
-                pushIndexLine(iVertex - (stepV + 1));
-                pushIndexLine(iVertex);
-            }
-
-            // Define index for two triangles (CW und CCW).
-            if (j > 0 && i > 0) {
-                pushIndexTriangle(iVertex);
-                pushIndexTriangle(iVertex - 1);
-                pushIndexTriangle(iVertex - (stepV + 1));
-                // ...die Rückseite
-                pushIndexTriangle(iVertex - (stepV + 1));
-                pushIndexTriangle(iVertex - 1);
-                pushIndexTriangle(iVertex);
-                //
-                pushIndexTriangle(iVertex - 1);
-                pushIndexTriangle(iVertex - (stepV + 1) - 1);
-                pushIndexTriangle(iVertex - (stepV + 1));
-                // ...die Rückseite
-                pushIndexTriangle(iVertex - (stepV + 1));
-                pushIndexTriangle(iVertex - (stepV + 1) - 1);
-                pushIndexTriangle(iVertex - 1);
-            }
+            // Punkte und Farbe definieren
+            pushVertices(x * scale); // X Koordinate
+            pushVertices(y * scale); // Y Koordinate
+            pushVertices(z * scale); // Z Koordinate
+            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+            pushVertices(1.0, 1.0, 1.0); // Normale
+            addElements(i, j, iVertex, stepV);
         }
     }
 }
 
 /**
- * Baut die Vertices Array für die Figur 2 auf Basis enes Modells auf
- * http://www.3d-meier.de/tut3/Seite22.html
+ * Kegel
  */
 function getFigure2VerticesPointsArray() {
     vertices = new Float32Array([]);
+    normalVector = new Float32Array([]);
     verticesIndexLine = new Uint16Array([]);
     verticesIndexTriangle = new Uint16Array([]);
 
-    //u ist Element aus der Zahlenmenge [-1.5, 1.5]
-    let uMin = -1.5;
-    let uMax = 1.5;
-    let stepU = 30;
-    let du = (uMax - uMin) / stepU;
+    // Parameter Winkel/Grad
+    let stepU = 32
+    let du = 2 * pi / stepU;
 
-    //v ist Element aus der Zahlenmenge [-1.5, 1.5]
-    let vMin = -1.5;
-    let vMax = 1.5;
-    let stepV = 30;
-    let dv = (vMax - vMin) / stepV;
+    // Parameter Höhe
+    let stepV = 16;
+    let dv = 1 / stepV;
 
-    // Farbwerte
-    var R = 1.0;
-    var G = 0.0;
-    var B = 0.0;
+    // Parameter Radius
+    let dr = 1 / stepV; // Es bietet sich an, hier stepV zu nutzen
 
-    for (let u = uMin, i = 0; i <= stepU; i++, u += du) {
-        for (let v = vMin, j = 0; j <= stepV; j++, v += dv) {
+    let scale = 300.0;
+    let scaleOpeningAngle = 1.0;
 
+    for (let u = 0.0, i = 0; i <= stepU; u += du, i++) { // Winkel / Kreis
+        for (let v = 0.0, r = 1.0, j = 0; j <= stepV; v += dv, r -= dr, j++) { // Höhe
             let iVertex = i * (stepV + 1) + j; // ==> Anzahl der Knoten
 
-            let x = u * v;
-            let y = u;
-            let z = Math.pow(v, 2);
+            let rScale = r * scaleOpeningAngle;
 
-            // define vertices
-            pushVertices(x * 100); // X Koordinate
-            pushVertices(y * 100); // Y Koordinate
-            pushVertices(z * 100); // Z Koordinate
-            pushVertices(R, G, B, 1); // Farbwert
+            let x = rScale * Math.cos(u);
+            let y = v - 0.5;
+            let z = rScale * Math.sin(u);
 
-            R -= 1.0 / (stepU * stepV);
-            G += 1.0 / (stepU * stepV);
+            let vertexLength = Math.sqrt(x * y * z);
+            pushNormalVector(x / vertexLength, y / vertexLength, z / vertexLength);
 
-            // Define index for one Line
-            if (i > 0 && j > 0) {
-                pushIndexLine(iVertex - 1); // ==> Es reicht der 1 Eintrag des Knoten !!!
-                pushIndexLine(iVertex);
-            }
-            if (i > 0 && j > 0) {
-                pushIndexLine(iVertex - (stepV + 1));
-                pushIndexLine(iVertex);
+            // Punkte und Farbe definieren
+            pushVertices(x * scale); // X Koordinate
+            pushVertices(y * scale); // Y Koordinate
+            pushVertices(z * scale); // Z Koordinate
+            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+
+            if (vertexLength === 0) {
+                pushVertices(0.0, 0.0, 0.0); // Normale
+            } else {
+                pushVertices(x / vertexLength, y / vertexLength, z / vertexLength); // Normale
             }
 
-            // Define index for two triangles
-            if (i > 0 && j >= 0) {
-                pushIndexTriangle(iVertex);
-                pushIndexTriangle(iVertex - 1);
-                pushIndexTriangle(iVertex - (stepV + 1));
-                //
-                pushIndexTriangle(iVertex);
-                pushIndexTriangle(iVertex - 1 - (stepV + 1));
-                pushIndexTriangle(iVertex - (stepV + 1));
-            }
+            addElements(i, j, iVertex, stepV);
         }
     }
 }
 
 /**
- * Baut die Vertices Array für die Linie und Dreiecke auf Basis der Vorgabewerte
+ * Kugel (Erzeugung mit parametrisierter Funktion
  */
 function getFigure3VerticesPointsArray() {
     vertices = new Float32Array([]);
@@ -178,69 +157,79 @@ function getFigure3VerticesPointsArray() {
     verticesIndexTriangle = new Uint16Array([]);
 
     // Parameter Winkel/Grad
-    let stepT = 16
-    let dg = 360 / stepT;
+    let stepU = 32
+    let du = 2 * pi / stepU;
 
-    // Parameter Radius
-    let stepR = 3;
-    let dr = 250 / stepR;
+    // Parameter Höhe
+    let stepV = 32;
+    let dv = pi / stepV;
 
-    for (let grad = 0.0, i = 0; i <= stepT; grad += dg, i++) {
-        for (let radius = 0.0, j = 0; j <= stepR; radius += dr, j++) {
-            let iVertex = i * (stepR + 1) + j; // ==> Anzahl der Knoten
+    let r = 0.6;
+    let scale = 300.0;
 
-            // Punkte definieren
-            pushVertices(sinusFromDegree(grad, radius)); // X Koordinate
-            pushVertices(cosinusFromDegree(grad, radius)); // Y Koordinate
-            pushVertices(0); // Z Koordinate
+    for (let u = 0.0, i = 0; i <= stepU; u += du, i++) { // Winkel / Kreis
+        for (let v = 0.0, j = 0; j <= stepV; v += dv, j++) { // Höhe
+            let iVertex = i * (stepV + 1) + j; // ==> Anzahl der Knoten
 
-            if (i % 2 === 0) {
-                pushVertices(1.0, 0.0, 0.0, 1); // Farbwert
-            } else if (i % 3 === 0) {
-                pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+            let x = r * Math.sin(v) * Math.cos(u);
+            let z = r * Math.cos(v);
+            let y = r * Math.sin(v) * Math.sin(u);
+
+            let vertexLength = Math.sqrt(x * y * z);
+            pushNormalVector(x / vertexLength, y / vertexLength, z / vertexLength);
+
+            // Punkte und Farbe definieren
+            pushVertices(x * scale); // X Koordinate
+            pushVertices(y * scale); // Y Koordinate
+            pushVertices(z * scale); // Z Koordinate
+            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+
+            if (vertexLength === 0) {
+                pushVertices(0.0, 0.0, 0.0); // Normale
             } else {
-                pushVertices(0.0, 0.0, 1.0, 1); // Farbwert
+                pushVertices(x / vertexLength, y / vertexLength, z / vertexLength); // Normale
             }
 
-            // Define index for one Line
-            if (i > 0 && j >= 0) { // Radien
-                pushIndexLine(iVertex - 1); // ==> Es reicht der 1 Eintrag des Knoten !!!
-                pushIndexLine(iVertex);
-            }
-            if (i > 0 && j >= 0) { // Kreise
-                if (i % 2 === 0) {
-                    pushIndexLine(iVertex - (stepR + 1));
-                    pushIndexLine(iVertex);
-                } else {
-                    if (j < stepR) {
-                        pushIndexLine(iVertex - (stepR + 1));
-                        pushIndexLine(iVertex);
-                    }
-                }
-            }
+            addElements(i, j, iVertex, stepV);
+        }
+    }
+}
 
-            // Define index for two triangles.
-            if (j > 0 && i > 0) {
-                if (i % 2 === 0) {
-                    pushIndexTriangle(iVertex);
-                    pushIndexTriangle(iVertex - 1);
-                    pushIndexTriangle(iVertex - (stepR + 1));
-                    //
-                    pushIndexTriangle(iVertex - 1);
-                    pushIndexTriangle(iVertex - (stepR + 1) - 1);
-                    pushIndexTriangle(iVertex - (stepR + 1));
-                } else {
-                    if (j < stepR) {
-                        pushIndexTriangle(iVertex);
-                        pushIndexTriangle(iVertex - 1);
-                        pushIndexTriangle(iVertex - (stepR + 1));
-                        //
-                        pushIndexTriangle(iVertex - 1);
-                        pushIndexTriangle(iVertex - (stepR + 1) - 1);
-                        pushIndexTriangle(iVertex - (stepR + 1));
-                    }
-                }
-            }
+/**
+ * Torus
+ */
+function getFigure4VerticesPointsArray() {
+    vertices = new Float32Array([]);
+    verticesIndexLine = new Uint16Array([]);
+    verticesIndexTriangle = new Uint16Array([]);
+
+    // Parameter Winkel/Grad
+    let stepU = 32
+    let du = 2 * pi / stepU;
+
+    // Parameter Höhe
+    let stepV = 32;
+    let dv = 2 * pi / stepV;
+
+    let rTorsoInnen = 0.5;
+    let rRing = 0.3;
+    let scale = 300;
+
+    for (let u = 0.0, i = 0; i <= stepU; u += du, i++) { // Winkel / Kreis
+        for (let v = 0.0, j = 0; j <= stepV; v += dv, j++) { // Höhe
+            let iVertex = i * (stepV + 1) + j; // ==> Anzahl der Knoten
+
+            let x = (rTorsoInnen + Math.cos(u) * rRing) * Math.cos(v);
+            let z = rRing * Math.sin(u);
+            let y = (rTorsoInnen + Math.cos(u) * rRing) * Math.sin(v);
+
+            // Punkte und Farbe definieren
+            pushVertices(x * scale); // X Koordinate
+            pushVertices(y * scale); // Y Koordinate
+            pushVertices(z * scale); // Z Koordinate
+            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+            pushVertices(1.0, 1.0, 1.0); // Normale
+            addElements(i, j, iVertex, stepV);
         }
     }
 }
