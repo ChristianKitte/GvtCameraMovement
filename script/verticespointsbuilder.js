@@ -187,7 +187,7 @@ function getFigure3VerticesPointsArray() {
             if (vertexLength === 0) {
                 pushVertices(0.0, 0.0, 0.0); // Normale
             } else {
-                pushVertices(x / vertexLength, y / vertexLength, z / vertexLength); // Normale
+                pushVertices(x / vertexLength, z / vertexLength, y / vertexLength); // Normale
             }
 
             addElements(i, j, iVertex, stepV);
