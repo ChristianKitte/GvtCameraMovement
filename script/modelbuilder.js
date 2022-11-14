@@ -5,6 +5,40 @@
 const pi = Math.PI;
 
 /**
+ * Array, das die aktuell vorkommendem Vertices hält
+ * * @type {*[]}
+ *  */
+var vertices = [];
+
+/**
+ * Array, das die aktuell vorkommendem Normalen hält
+ * * @type {*[]}
+ *  */
+var normals = [];
+
+/**
+ * Array, das die aktuellen VerticesIndizes für die Linien hält
+ * @type {*[]}
+ */
+var verticesIndexLine = [];
+
+/**
+ * Array, das die aktuellen VerticesIndizes für die Dreiecke hält
+ * * @type {*[]}
+ *  */
+var verticesIndexTriangle = [];
+
+/**
+ * Leert alle Arrays
+ */
+function clearArrays() {
+    vertices = [];
+    normals = [];
+    verticesIndexLinex = [];
+    verticesIndexTriangle = [];
+}
+
+/**
  * Hilfsfuktion zum Berechnen der Sinuswerte auf Basis von Grad
  * @param degree zu berechnender Grad
  * @param y_scale die zu verwendende Skalierung der Amplitude
@@ -35,38 +69,38 @@ function cosinusFromDegree(degree, y_scale) {
  * @param stepV Schrittweite für Schleife j
  */
 function addElements(i, j, iVertex, stepV) {
-    // Define index for one Line
-    if (i > 0 && j > 0) { // Radien
-        pushIndexLine(iVertex - 1);
-        pushIndexLine(iVertex);
-    }
-    if (i > 0 && j > 0) { // Ring
-        pushIndexLine(iVertex - (stepV + 1));
-        pushIndexLine(iVertex);
+    // Definiert die Linien für das Gitternetz
+    if (i > 0 && j > 0) {
+        verticesIndexLine.push(iVertex - 1);
+        verticesIndexLine.push(iVertex);
     }
 
-    // Define index for two triangles.
+    if (i > 0 && j > 0) {
+        verticesIndexLine.push(iVertex - (stepV + 1));
+        verticesIndexLine.push(iVertex);
+    }
+
+    // Definiert zwei Dreiecke, die zsuammen das durch die Linien begrenzte
+    // Rechteck bilden
     if (j > 0 && i > 0) {
-        pushIndexTriangle(iVertex);
-        pushIndexTriangle(iVertex - 1);
-        pushIndexTriangle(iVertex - (stepV + 1));
-        //
-        pushIndexTriangle(iVertex - 1);
-        pushIndexTriangle(iVertex - (stepV + 1) - 1);
-        pushIndexTriangle(iVertex - (stepV + 1));
+        verticesIndexTriangle.push(iVertex);
+        verticesIndexTriangle.push(iVertex - 1);
+        verticesIndexTriangle.push(iVertex - (stepV + 1));
+
+        verticesIndexTriangle.push(iVertex - 1);
+        verticesIndexTriangle.push(iVertex - (stepV + 1) - 1);
+        verticesIndexTriangle.push(iVertex - (stepV + 1));
     }
 }
 
 /**
- * Zylinder
+ * Zylinder (Erzeugung mit parametrisierter Funktion)
  */
 function getFigure1VerticesPointsArray() {
-    vertices = new Float32Array([]);
-    verticesIndexLine = new Uint16Array([]);
-    verticesIndexTriangle = new Uint16Array([]);
+    clearArrays();
 
     // Parameter Winkel/Grad
-    let stepU = 32
+    let stepU = 32;
     let du = 2 * pi / stepU;
 
     // Parameter Höhe
@@ -85,27 +119,26 @@ function getFigure1VerticesPointsArray() {
             let z = r * Math.sin(u);
 
             // Punkte und Farbe definieren
-            pushVertices(x * scale); // X Koordinate
-            pushVertices(y * scale); // Y Koordinate
-            pushVertices(z * scale); // Z Koordinate
-            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
-            pushVertices(1.0, 1.0, 1.0); // Normale
+            vertices.push(x * scale); // X Koordinate
+            vertices.push(y * scale); // Y Koordinate
+            vertices.push(z * scale); // Z Koordinate
+            vertices.push(0.0, 1.0, 0.0, 1); // Farbwert
+
+            vertices.push(1.0, 1.0, 1.0); // Normale
+
             addElements(i, j, iVertex, stepV);
         }
     }
 }
 
 /**
- * Kegel
+ * Kegel (Erzeugung mit parametrisierter Funktion)
  */
 function getFigure2VerticesPointsArray() {
-    vertices = new Float32Array([]);
-    normalVector = new Float32Array([]);
-    verticesIndexLine = new Uint16Array([]);
-    verticesIndexTriangle = new Uint16Array([]);
+    clearArrays();
 
     // Parameter Winkel/Grad
-    let stepU = 32
+    let stepU = 32;
     let du = 2 * pi / stepU;
 
     // Parameter Höhe
@@ -128,19 +161,18 @@ function getFigure2VerticesPointsArray() {
             let y = v - 0.5;
             let z = rScale * Math.sin(u);
 
-            let vertexLength = Math.sqrt(x * y * z);
-            pushNormalVector(x / vertexLength, y / vertexLength, z / vertexLength);
-
             // Punkte und Farbe definieren
-            pushVertices(x * scale); // X Koordinate
-            pushVertices(y * scale); // Y Koordinate
-            pushVertices(z * scale); // Z Koordinate
-            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+            vertices.push(x * scale); // X Koordinate
+            vertices.push(y * scale); // Y Koordinate
+            vertices.push(z * scale); // Z Koordinate
+            vertices.push(0.0, 1.0, 0.0, 1); // Farbwert
 
+            // Normalen definieren
+            let vertexLength = Math.sqrt(x * y * z);
             if (vertexLength === 0) {
-                pushVertices(0.0, 0.0, 0.0); // Normale
+                vertices.push(0.0, 0.0, 0.0); // Normale
             } else {
-                pushVertices(x / vertexLength, y / vertexLength, z / vertexLength); // Normale
+                vertices.push(x / vertexLength, y / vertexLength, z / vertexLength); // Normale
             }
 
             addElements(i, j, iVertex, stepV);
@@ -149,15 +181,13 @@ function getFigure2VerticesPointsArray() {
 }
 
 /**
- * Kugel (Erzeugung mit parametrisierter Funktion
+ * Kugel (Erzeugung mit parametrisierter Funktion)
  */
 function getFigure3VerticesPointsArray() {
-    vertices = new Float32Array([]);
-    verticesIndexLine = new Uint16Array([]);
-    verticesIndexTriangle = new Uint16Array([]);
+    clearArrays();
 
     // Parameter Winkel/Grad
-    let stepU = 32
+    let stepU = 32;
     let du = 2 * pi / stepU;
 
     // Parameter Höhe
@@ -175,19 +205,18 @@ function getFigure3VerticesPointsArray() {
             let z = r * Math.cos(v);
             let y = r * Math.sin(v) * Math.sin(u);
 
-            let vertexLength = Math.sqrt(x * y * z);
-            pushNormalVector(x / vertexLength, y / vertexLength, z / vertexLength);
-
             // Punkte und Farbe definieren
-            pushVertices(x * scale); // X Koordinate
-            pushVertices(y * scale); // Y Koordinate
-            pushVertices(z * scale); // Z Koordinate
-            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
+            vertices.push(x * scale); // X Koordinate
+            vertices.push(y * scale); // Y Koordinate
+            vertices.push(z * scale); // Z Koordinate
+            vertices.push(0.0, 1.0, 0.0, 1); // Farbwert
 
+            // Normalen definieren
+            let vertexLength = Math.sqrt(x * y * z);
             if (vertexLength === 0) {
-                pushVertices(0.0, 0.0, 0.0); // Normale
+                vertices.push(0.0, 0.0, 0.0); // Normale
             } else {
-                pushVertices(x / vertexLength, z / vertexLength, y / vertexLength); // Normale
+                vertices.push(x / vertexLength, z / vertexLength, y / vertexLength); // Normale
             }
 
             addElements(i, j, iVertex, stepV);
@@ -196,15 +225,13 @@ function getFigure3VerticesPointsArray() {
 }
 
 /**
- * Torus
+ * Torus (Erzeugung mit parametrisierter Funktion)
  */
 function getFigure4VerticesPointsArray() {
-    vertices = new Float32Array([]);
-    verticesIndexLine = new Uint16Array([]);
-    verticesIndexTriangle = new Uint16Array([]);
+    clearArrays();
 
     // Parameter Winkel/Grad
-    let stepU = 32
+    let stepU = 32;
     let du = 2 * pi / stepU;
 
     // Parameter Höhe
@@ -224,11 +251,13 @@ function getFigure4VerticesPointsArray() {
             let y = (rTorsoInnen + Math.cos(u) * rRing) * Math.sin(v);
 
             // Punkte und Farbe definieren
-            pushVertices(x * scale); // X Koordinate
-            pushVertices(y * scale); // Y Koordinate
-            pushVertices(z * scale); // Z Koordinate
-            pushVertices(0.0, 1.0, 0.0, 1); // Farbwert
-            pushVertices(1.0, 1.0, 1.0); // Normale
+            vertices.push(x * scale); // X Koordinate
+            vertices.push(y * scale); // Y Koordinate
+            vertices.push(z * scale); // Z Koordinate
+            vertices.push(0.0, 1.0, 0.0, 1); // Farbwert
+
+            vertices.push(1.0, 1.0, 1.0); // Normale
+
             addElements(i, j, iVertex, stepV);
         }
     }

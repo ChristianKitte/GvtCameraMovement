@@ -23,10 +23,6 @@ function RefreshWaves(modellNr) {
     var vbo = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
 
-    // Buffer für die Normalen erzeugen und laden
-    //var nbo = gl.createBuffer();
-    //gl.bindBuffer(gl.ARRAY_BUFFER, nbo);
-
     // Buffer für die Indizes erzeugen und laden
     var ibo = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
@@ -40,10 +36,6 @@ function RefreshWaves(modellNr) {
 
     var aColor = gl.getAttribLocation(program, 'aColor');
     gl.enableVertexAttribArray(aColor);
-    //gl.disableVertexAttribArray(aColor);
-
-    // Wert des deaktivierten Attributs aColor überschreiben (Es kann auch ein Array übergeben werden)
-    //gl.vertexAttrib3f(aColor, 0.0, 0.0, 0.0);
 
     // Zeiger erzeugen und konfigurieren
     gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 10 * 4, 0);
@@ -53,19 +45,17 @@ function RefreshWaves(modellNr) {
     // alte Ausgabe löschen
     gl.clear(gl.COLOR_BUFFER_BIT || gl.DEPTH_BUFFER_BIT);
 
-    // Daten binden
-    //gl.bufferData(gl.ARRAY_BUFFER, normalVector, gl.STATIC_DRAW);
+    // Knotendaten verfügbar machen und binden
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, verticesIndexTriangle, gl.STATIC_DRAW);
+    // Indexarray für die Linien binden und ausgeben
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(verticesIndexTriangle), gl.STATIC_DRAW);
     ibo.numerOfEmements = verticesIndexTriangle.length;
-
-    // Ausgabe
     gl.drawElements(gl.TRIANGLES, ibo.numerOfEmements, gl.UNSIGNED_SHORT, 0);
 
     if (showLine) {
-        // Daten binden / Wechseln
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, verticesIndexLine, gl.STATIC_DRAW);
+        // Indexarary für doe Linien binden (eigentlich wechseln)
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(verticesIndexLine), gl.STATIC_DRAW);
         ibo.numerOfEmements = verticesIndexLine.length;
 
         // Ausgabe
