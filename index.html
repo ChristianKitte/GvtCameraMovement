@@ -39,19 +39,27 @@
         <button id="figure2" class="btn btn-primary">Kegel</button>
         <button id="figure3" class="btn btn-primary">Kugel (Param)</button>
         <button id="figure4" class="btn btn-primary">Torus</button>
-        <p>Die Berechnung kann etwas Zeit in Anspruch nehmen</p>
+        <button id="figure5" class="btn btn-primary">Kugel (Rekursiv)</button>
+
         <p id="info_text">Aktuell wird die Figur x angezeigt</p>
     </div>
 
+    <div id="recursionDeep" class="slider-bar slider-content">
+        <input class="form-range slider" type="range" id="recursion-deep" name="amplitude" min="0" max="10" value="1"
+               step="1">
+        <span id="recursion-value">Rekursionstiefe: 1 (Einstellen mit Schieberegler)</span>
+    </div>
+
     <div id="checkBox">
-        <input type="checkbox" id="show_line" name="show_line" value="1" checked="checked">
-        <label for="show_line">Linien anzeigen</label>
+        <input type="checkbox" id="show-line" name="show-line" value="1" checked="checked">
+        <label for="show-line">Linien anzeigen</label>
     </div>
 
     <canvas id="canvas" width="1000px" height="1000px"></canvas>
 </div>
 
 <script src="script/modelbuilder.js"></script>
+<script src="script/sphererecursion.js"></script>
 <script src="script/shader.js"></script>
 <script src="script/webglconfig.js"></script>
 <script src="script/configure.js"></script>

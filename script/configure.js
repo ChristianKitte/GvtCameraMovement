@@ -9,22 +9,22 @@
 var activeModel = 1;
 
 /**
+ * Der Infotext für die Rekursiontiefe
+ * @type {number}
+ */
+var recursionDeep = 1;
+
+/**
  * Die Einstellung zur Anzeige des Gittergerüstes
  * @type {boolean}
  */
-var showLine = document.getElementById("show_line").checked;
+var showLine = document.getElementById("show-line").checked;
 
 /**
  * Der Infotext für das angezeigte Modell
  * @type {HTMLElement}
  */
 var infoText = document.getElementById("info_text");
-
-/**
- * Der Infolink für das angezeigte Modell
- * @type {HTMLElement}
- */
-var infoLink = document.getElementById("info_link");
 
 //*************************************************************************
 // UI Handler
@@ -33,8 +33,18 @@ var infoLink = document.getElementById("info_link");
 /**
  * Setzt den Wert für die Anzeige des Gittermodells und startet das Neuzeichnen
  */
-document.getElementById("show_line").onchange = () => {
-    showLine = document.getElementById("show_line").checked;
+document.getElementById("show-line").onchange = () => {
+    showLine = document.getElementById("show-line").checked;
+    RefreshWaves(activeModel);
+}
+
+/**
+ * Setzt den Wert für die Rekursionstiefe der Kugel und initiiert das Neuzeichnen
+ */
+document.getElementById("recursion-deep").oninput = () => {
+    recursionDeep = parseInt(document.getElementById("recursion-deep").value);
+    document.getElementById("recursion-value").innerText = "Rekursionstiefe: " + recursionDeep + " (Einstellen mit Schieberegler)";
+
     RefreshWaves(activeModel);
 }
 
@@ -103,6 +113,15 @@ document.getElementById("figure3").onclick = () => {
  */
 document.getElementById("figure4").onclick = () => {
     activeModel = 4;
+    setInfoText();
+    RefreshWaves(activeModel);
+}
+
+/**
+ * Zeigt die 5.Figur an
+ */
+document.getElementById("figure5").onclick = () => {
+    activeModel = 5;
     setInfoText();
     RefreshWaves(activeModel);
 }

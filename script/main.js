@@ -1,24 +1,4 @@
-/**
- * Belegt den Ausgabebuffer des aktuellen WebGL Programms mit den aktuellen Daten neu und zeichnet die
- * Ausgabe. Das WebGL Programm muss zuvor bereits initialisiert und konfiguriert worden sein.
- */
-function RefreshWaves(modellNr) {
-    // Arrays für neue Ausgabe füllen
-    switch (modellNr) {
-        case 1:
-            getFigure1VerticesPointsArray();
-            break;
-        case 2:
-            getFigure2VerticesPointsArray();
-            break;
-        case 3:
-            getFigure3VerticesPointsArray();
-            break;
-        case 4:
-            getFigure4VerticesPointsArray();
-            break;
-    }
-
+function drawGrafic() {
     // Buffer für die Punkte erzeugen und laden
     var vbo = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
@@ -63,6 +43,38 @@ function RefreshWaves(modellNr) {
         gl.drawElements(gl.LINES, ibo.numerOfEmements, gl.UNSIGNED_SHORT, 0);
     }
 }
+
+/**
+ * Belegt den Ausgabebuffer des aktuellen WebGL Programms mit den aktuellen Daten neu und zeichnet die
+ * Ausgabe. Das WebGL Programm muss zuvor bereits initialisiert und konfiguriert worden sein.
+ */
+function RefreshWaves(modellNr) {
+    // Arrays für neue Ausgabe füllen
+    switch (modellNr) {
+        case 1:
+            getFigure1VerticesPointsArray();
+            drawGrafic();
+            break;
+        case 2:
+            getFigure2VerticesPointsArray();
+            drawGrafic();
+            break;
+        case 3:
+            getFigure3VerticesPointsArray();
+            drawGrafic();
+            break;
+        case 4:
+            getFigure4VerticesPointsArray();
+            drawGrafic();
+            break;
+        case 5:
+            buildRecursionSphere(recursionDeep);
+            //drawGrafic();
+            break;
+    }
+}
+
+
 
 /**
  * Startet die WebGL Anwendung und erste Ausgabe der Grafik

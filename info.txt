@@ -24,3 +24,6 @@ https://www.youtube.com/watch?v=6e3xnaKjtGM&list=PLjcjAqAnHd1EnbY9QPLrZGfs7LorRt
 https://www.youtube.com/watch?v=-nqIzV9OuQM
 
 https://www.youtube.com/watch?v=HiCVXEkkSK4&list=PLPaoO-vpZnumdcb4tZc4x5Q-v7CkrQ6M-&index=8
+
+
+https://stackoverflow.com/questions/26790422/recursive-subdivision-on-octahedron-in-opengl

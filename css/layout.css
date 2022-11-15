@@ -34,6 +34,11 @@ body {
     font-size: larger;
 }
 
+#recursionDeep {
+    margin-left: 7px;
+    padding: 1%;
+}
+
 #checkBox {
     margin-left: 7px;
     padding: 1%;
