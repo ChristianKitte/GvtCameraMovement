@@ -52,31 +52,30 @@ function RefreshWaves(modellNr) {
     // Arrays für neue Ausgabe füllen
     switch (modellNr) {
         case 1:
-            getFigure1VerticesPointsArray();
-            drawGrafic();
+            app.start();
             break;
         case 2:
-            getFigure2VerticesPointsArray();
-            drawGrafic();
+            app.start();
             break;
         case 3:
-            getFigure3VerticesPointsArray();
-            drawGrafic();
+            app.start();
             break;
         case 4:
-            getFigure4VerticesPointsArray();
-            drawGrafic();
+            app.start();
             break;
         case 5:
-            buildRecursionSphere(recursionDeep);
-            //drawGrafic();
+            app.start();
             break;
     }
 }
 
 
-
 /**
  * Startet die WebGL Anwendung und erste Ausgabe der Grafik
  */
-iniWebGLApp();
+//
+
+window.onload = function () {
+    iniWebGLApp();
+    app.start();
+}
