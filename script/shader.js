@@ -30,7 +30,7 @@ const vertexShaderSource = `#version 300 es
         
         //vColor = vec4(normal.z, normal.z, normal.z, 1);
         
-        gl_Position=vec4(aPosition, 365);
+        gl_Position=uPMatrix * uMVMatrix * vec4(aPosition, 100.0);
         gl_PointSize=1.0;       
     }
 `;

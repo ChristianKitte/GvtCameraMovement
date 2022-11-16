@@ -41,7 +41,7 @@ Grafik einfach einzubinden. In der Datei **layout.css** wird das Layout der Webs
 Bootstrap für die Buttons zum Einsatz.
 
 Die Logik verteilt sich auf mehrere JavaScript Dateien, welche von **main.js** genutzt werden. WebGL selbst und der
-Shadercode befinden sich in den Dateien **webglconfig.js** und **shader.js**. In der Datei **configure.js** werden die
+Shadercode befinden sich in den Dateien **mod_webgl.js** und **shader.js**. In der Datei **configure.js** werden die
 Programmeinstellungen gehalten. Die Datei **extendedvertexarray.js** handelt Arrayfunktionen und die Arrays selbst.
 
 Der Canvas als zentrales Ausgabeobjekt wurde in der **index.html** angelegt und mit einer fixen Breite von 1000px

@@ -35,7 +35,7 @@ var infoText = document.getElementById("info_text");
  */
 document.getElementById("show-line").onchange = () => {
     showLine = document.getElementById("show-line").checked;
-    RefreshWaves(activeModel);
+    app.start();
 }
 
 /**
@@ -44,8 +44,7 @@ document.getElementById("show-line").onchange = () => {
 document.getElementById("recursion-deep").oninput = () => {
     recursionDeep = parseInt(document.getElementById("recursion-deep").value);
     document.getElementById("recursion-value").innerText = "Rekursionstiefe: " + recursionDeep + " (Einstellen mit Schieberegler)";
-
-    RefreshWaves(activeModel);
+    app.start();
 }
 
 /***
@@ -56,6 +55,7 @@ function setInfoText() {
     document.getElementById("figure2").classList.remove("btn-success");
     document.getElementById("figure3").classList.remove("btn-success");
     document.getElementById("figure4").classList.remove("btn-success");
+    document.getElementById("figure5").classList.remove("btn-success");
 
     switch (activeModel) {
         case 1:
@@ -78,6 +78,11 @@ function setInfoText() {
             infoText.innerText = "Aktuell wird die Figur 4 (Torus) angezeigt";
             document.getElementById("figure4").classList.add("btn-success");
             break;
+        case 5:
+            // code block
+            infoText.innerText = "Aktuell wird die Figur 5 (rekursive Kugel) angezeigt";
+            document.getElementById("figure5").classList.add("btn-success");
+            break;
     }
 }
 
@@ -87,7 +92,7 @@ function setInfoText() {
 document.getElementById("figure1").onclick = () => {
     activeModel = 1;
     setInfoText();
-    RefreshWaves(activeModel);
+    app.start();
 }
 
 /**
@@ -96,7 +101,7 @@ document.getElementById("figure1").onclick = () => {
 document.getElementById("figure2").onclick = () => {
     activeModel = 2;
     setInfoText();
-    RefreshWaves(activeModel);
+    app.start();
 }
 
 /**
@@ -105,7 +110,7 @@ document.getElementById("figure2").onclick = () => {
 document.getElementById("figure3").onclick = () => {
     activeModel = 3;
     setInfoText();
-    RefreshWaves(activeModel);
+    app.start();
 }
 
 /**
@@ -114,7 +119,7 @@ document.getElementById("figure3").onclick = () => {
 document.getElementById("figure4").onclick = () => {
     activeModel = 4;
     setInfoText();
-    RefreshWaves(activeModel);
+    app.start();
 }
 
 /**
@@ -123,5 +128,5 @@ document.getElementById("figure4").onclick = () => {
 document.getElementById("figure5").onclick = () => {
     activeModel = 5;
     setInfoText();
-    RefreshWaves(activeModel);
+    app.start();
 }
