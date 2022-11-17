@@ -1,18 +1,6 @@
 var WebGlInstance = (function () {
     let webGL = {};
 
-    /**
-     * Der aktuell gültige WebGL Kontext
-     * @type {*} Ein WebGL Kontext
-     */
-
-    //const gl = getContext(0.9, 0.9, 0.9, 1);
-
-    /**
-     * Das Aktuell gültige WebGL Programm
-     */
-    //const program = gl.createProgram();
-
     webGL.create = function () {
         iniWebGl();
     }
@@ -71,23 +59,23 @@ var WebGlInstance = (function () {
      */
     function iniWebGLApp() {
         var vsShader = webGL.gl.createShader(webGL.gl.VERTEX_SHADER);
-        webGL.gl.shaderSource(vsShader, vertexShaderSource);
+        webGL.gl.shaderSource(vsShader, vertexShader);
         webGL.gl.compileShader(vsShader);
         webGL.gl.attachShader(webGL.program, vsShader);
 
         var fsShader = webGL.gl.createShader(webGL.gl.FRAGMENT_SHADER);
-        webGL.gl.shaderSource(fsShader, fragmentShaderSouce);
+        webGL.gl.shaderSource(fsShader, fragmentShader);
         webGL.gl.compileShader(fsShader);
         webGL.gl.attachShader(webGL.program, fsShader);
 
         webGL.gl.linkProgram(webGL.program);
 
         if (!webGL.gl.getProgramParameter(webGL.program, webGL.gl.LINK_STATUS)) {
-            console.log(webGL.gl.getShaderInfoLog(vertexShaderSource));
-            console.log(webGL.gl.getShaderInfoLog(fragmentShaderSouce));
+            console.log(webGL.gl.getShaderInfoLog(vertexShader));
+            console.log(webGL.gl.getShaderInfoLog(fragmentShader));
         }
 
-        webGL.gl.frontFace(webGL.gl.CW);
+        webGL.gl.frontFace(webGL.gl.CCW);
         webGL.gl.enable(webGL.gl.CULL_FACE);
         webGL.gl.cullFace(webGL.gl.BACK);
 
@@ -97,7 +85,7 @@ var WebGlInstance = (function () {
 
         // Polygon offset of rastered Fragments.
         webGL.gl.enable(webGL.gl.POLYGON_OFFSET_FILL);
-        webGL.gl.polygonOffset(1, 1);
+        webGL.gl.polygonOffset(0.5, 0);
 
         webGL.gl.useProgram(webGL.program);
     }

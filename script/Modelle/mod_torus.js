@@ -50,6 +50,8 @@ var modTorus = (function () {
         let scale = 100;
 
         for (let u = 0.0, i = 0; i <= stepU; u += du, i++) { // Winkel / Kreis
+            let farbwert = 0;
+
             for (let v = 0.0, j = 0; j <= stepV; v += dv, j++) { // Höhe
                 let iVertex = i * (stepV + 1) + j; // ==> Anzahl der Knoten
 
@@ -61,7 +63,17 @@ var modTorus = (function () {
                 vertices.push(x * scale); // X Koordinate
                 vertices.push(y * scale); // Y Koordinate
                 vertices.push(z * scale); // Z Koordinate
-                vertices.push(0.0, 1.0, 0.0, 1); // Farbwert
+
+                if (farbwert === 0) {
+                    vertices.push(1.0, 0.0, 0.0, 1); // Farbwert
+                    farbwert++;
+                } else if (farbwert === 1) {
+                    vertices.push(0.0, 1.0, 0.0, 1); // Farbwert
+                    farbwert++;
+                } else if (farbwert === 2) {
+                    vertices.push(0.0, 0.0, 1.0, 1); // Farbwert
+                    farbwert = 0;
+                }
 
                 vertices.push(1.0, 1.0, 1.0); // Normale
 

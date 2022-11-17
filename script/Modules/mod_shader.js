@@ -2,7 +2,7 @@
  * Der Code des Vertex Shader der über jeden Punkt ausgeführt wird
  * @type {string}
  */
-const vertexShaderSource = `#version 300 es  
+const vertexShader = `#version 300 es  
     uniform mat4 uPMatrix;
     uniform mat4 uMVMatrix;
   
@@ -33,13 +33,13 @@ const vertexShaderSource = `#version 300 es
         gl_Position=uPMatrix * uMVMatrix * vec4(aPosition, 100.0);
         gl_PointSize=1.0;       
     }
-`;
+    `;
 
 /**
  * Der Code des Fragment Shader, der über jeden Pixel des Fragments ausgeführt wird.
  * @type {string} Der Code
  */
-const fragmentShaderSouce = `#version 300 es
+const fragmentShader = `#version 300 es
     
     precision mediump float;
 
@@ -63,4 +63,5 @@ const fragmentShaderSouce = `#version 300 es
         fragColor=vColor;
         //fragColor.a=1.0;
     }
-`;
+    `;
+

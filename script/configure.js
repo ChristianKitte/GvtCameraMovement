@@ -6,7 +6,7 @@
  * Die Nummer des aktiven Modells
  * @type {number}
  */
-var activeModel = 1;
+var activeModel = 0;
 
 /**
  * Der Infotext für die Rekursiontiefe
@@ -51,6 +51,7 @@ document.getElementById("recursion-deep").oninput = () => {
  * Setzt den angezeigten Text anhand des aktuellen Modells
  */
 function setInfoText() {
+    document.getElementById("figure0").classList.remove("btn-success");
     document.getElementById("figure1").classList.remove("btn-success");
     document.getElementById("figure2").classList.remove("btn-success");
     document.getElementById("figure3").classList.remove("btn-success");
@@ -58,6 +59,11 @@ function setInfoText() {
     document.getElementById("figure5").classList.remove("btn-success");
 
     switch (activeModel) {
+        case 0:
+            // code block
+            infoText.innerText = "Aktuell wird eine Komposition verschiedener Körper angezeigt";
+            document.getElementById("figure0").classList.add("btn-success");
+            break;
         case 1:
             // code block
             infoText.innerText = "Aktuell wird die Figur 1 (Zylinder) angezeigt";
@@ -84,6 +90,15 @@ function setInfoText() {
             document.getElementById("figure5").classList.add("btn-success");
             break;
     }
+}
+
+/**
+ * Zeigt die 1.Figur an
+ */
+document.getElementById("figure0").onclick = () => {
+    activeModel = 0;
+    setInfoText();
+    app.start();
 }
 
 /**
