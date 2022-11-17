@@ -21,10 +21,18 @@ var recursionDeep = 1;
 var showLine = document.getElementById("show-line").checked;
 
 /**
- * Der Infotext für das angezeigte Modell
+ * Der Infotext für die verwendete Szene
  * @type {HTMLElement}
  */
 var infoText = document.getElementById("info_text");
+infoText.innerText = "Aktuell wird eine Komposition verschiedener Körper angezeigt";
+
+/**
+ * Der Infotext für den verwendeten Projektionstyp
+ * @type {HTMLElement}
+ */
+var projektionsText = document.getElementById("projection_text");
+projektionsText.innerText = "Projektionstyp: Orthogonal";
 
 //*************************************************************************
 // UI Handler

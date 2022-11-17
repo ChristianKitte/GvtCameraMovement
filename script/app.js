@@ -5,7 +5,7 @@ var app = (function () {
         // Initial position of the camera.
         eye: [0, 1, 4],
         // Point to look at.
-        center: [0, 0, 0],
+        center: [0.1, -.5, -2],
         // Roll and pitch of the camera.
         up: [0, 1, 0],
         // Opening angle given in radian.
@@ -13,7 +13,7 @@ var app = (function () {
         fovy: 60.0 * Math.PI / 180,
         // Camera near plane dimensions:
         // value for left right top bottom in projection.
-        lrtb: 2.0,
+        lrtb: 3.0,
         // View matrix.
         vMatrix: glMatrix.mat4.create(),
         // Projection matrix.
@@ -26,6 +26,109 @@ var app = (function () {
         // Distance in XZ-Plane from center when orbiting.
         distance: 14,
     };
+
+    document.addEventListener('keydown', (event) => {
+        const keyName = event.key;
+
+        if (keyName === 'Control') {
+            // do not alert when only Control key is pressed.
+            return;
+        }
+
+        switch (keyName) {
+            case "ArrowUp": // ==> nach oben über die Szene
+                camera.zAngle += Math.PI / 36;
+                render();
+                break;
+            case "ArrowDown": // ==> nach unten über die Szene
+                camera.zAngle -= Math.PI / 36;
+                render();
+                break;
+            case "ArrowLeft": // ==> links um die Szene
+
+                render();
+                break;
+            case "ArrowRight": // ==> Rechts um die Szene
+
+                render();
+                break;
+
+            case "o": // +y
+                camera.projectionType = "ortho";
+                projektionsText.innerText = "Projektionstyp: Orthogonal";
+                render();
+                break;
+            case "p": // +y
+                camera.projectionType = "perspective";
+                projektionsText.innerText = "Projektionstyp: Perspektivisch";
+                render();
+                break;
+            case "f": // +y
+                camera.projectionType = "frustum";
+                projektionsText.innerText = "Frustum: ";
+                render();
+                break;
+
+            case "w": // +y
+                camera.center[1] = camera.center[1] - 0.5;
+                render();
+                break;
+            case "s": // -y
+                camera.center[1] = camera.center[1] + 0.5;
+                render();
+                break;
+            case "a": // -x
+                camera.center[0] = camera.center[0] + 0.5;
+                render();
+                break;
+            case "d": // x
+                camera.center[0] = camera.center[0] - 0.5;
+                render();
+                break;
+            case "Z":
+                switch (camera.projectionType) {
+                    case("ortho"):
+                        camera.lrtb += 0.1;
+                        render();
+                        break;
+                    case("frustum"):
+                        camera.lrtb += 0.1;
+                        render();
+                        break;
+                    case("perspective"):
+                        camera.fovy += 5 * Math.PI / 180;
+                        render();
+                        break;
+                }
+                break;
+            case "z":
+                switch (camera.projectionType) {
+                    case("ortho"):
+                        camera.lrtb -= 0.1;
+                        render();
+                        break;
+                    case("frustum"):
+                        camera.lrtb -= 0.1;
+                        render();
+                        break;
+                    case("perspective"):
+                        camera.fovy -= 5 * Math.PI / 180;
+                        render();
+                        break;
+                }
+                break;
+            case "n": // n ==> Radius kleiner
+                camera.distance++;
+                render();
+                break;
+            case "N": // shift-n ==> Radius größer
+                camera.distance--;
+                render();
+                break;
+        }
+
+
+    }, false);
 
     function start() {
         init();
@@ -69,37 +172,6 @@ var app = (function () {
         models.push(model);
     }
 
-    function updateTransformations(model) {
-        // Use shortcut variables.
-        var mMatrix = model.mMatrix;
-        var mvMatrix = model.mvMatrix;
-
-        // Reset matrices to identity.
-        glMatrix.mat4.identity(mMatrix);
-        glMatrix.mat4.identity(mvMatrix);
-
-        // Translate.
-        glMatrix.mat4.translate(mMatrix, mMatrix, model.translate);
-
-        // Scale
-        glMatrix.mat4.scale(mMatrix, mMatrix, model.scale);
-
-        // Combine view and model matrix
-        // by matrix multiplication to mvMatrix.
-        glMatrix.mat4.multiply(mvMatrix, camera.vMatrix, mMatrix);
-    }
-
-    function initTransformations(model, translate, rotate, scale) {
-        // Store transformation vectors.
-        model.translate = translate;
-        model.rotate = rotate;
-        model.scale = scale;
-
-        // Model-Matrix und Model-View Matrix zum Model hinzufügen.
-        model.mMatrix = glMatrix.mat4.create();
-        model.mvMatrix = glMatrix.mat4.create();
-    }
-
     function initDataAndBuffers(model, modelName) {
         this[modelName]['createModellVertex'].apply(model);
 
@@ -130,56 +202,92 @@ var app = (function () {
         WebGlInstance.webGL.gl.vertexAttribPointer(aNormal, 3, WebGlInstance.webGL.gl.FLOAT, false, 10 * 4, 7 * 4);
     }
 
-    function setProjection() {
-        // Set projection Matrix.
-        switch (camera.projectionType) {
-            case("ortho"):
-                var v = camera.lrtb;
-                glMatrix.mat4.ortho(camera.pMatrix, -v, v, -v, v, -10, 10);
-                break;
-            case("frustum"):
-                var v = camera.lrtb;
-                glMatrix.mat4.frustum(camera.pMatrix, -v / 2, v / 2, -v / 2, v / 2, 1, 10);
-                break;
-            case("perspective"):
-                glMatrix.mat4.perspective(camera.pMatrix, camera.fovy,
-                    camera.aspect, 1, 10);
-                break;
-        }
+    // Dem Modell Eigenschaften für Translate, Rotate und Scale Vector
+    // sowie für Model, View Scale Matrix hinzufügen
+    function initTransformations(model, translate, rotate, scale) {
+        model.translate = translate;
+        model.rotate = rotate;
+        model.scale = scale;
 
-        // Set projection uniform.
-        WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.pMatrixUniform, false, camera.pMatrix);
+        model.modelMatrix = glMatrix.mat4.create();
+        model.viewMatrix = glMatrix.mat4.create();
+        model.scaleMatrix = glMatrix.mat4.create();
     }
 
-    function setCamera() {
-        // Calculate x,z position/eye of camera orbiting the center.
-        var x = 0, z = 2;
-        camera.eye[x] = camera.center[x];
-        camera.eye[z] = camera.center[z];
-        camera.eye[x] += camera.distance * Math.sin(camera.zAngle);
-        camera.eye[z] += camera.distance * Math.cos(camera.zAngle);
-    }
-
+    // Konfiguriert und setzt die Matrizen für Model, View und Projektion und gibt die hinterlegten
+    // Modelle aus
     function render() {
+        // Löschen der alten Ausgabe
         WebGlInstance.webGL.gl.clear(WebGlInstance.webGL.gl.COLOR_BUFFER_BIT | WebGlInstance.webGL.gl.DEPTH_BUFFER_BIT);
 
-        // setzt die Projektionsmatrix der Kamera
-        setProjection();
+        // konfiguriert und setzt die globale Projektionsmatrix der Kamera (Projection Matrix)
+        setCameraProjectionMatrix();
 
-        //setCamera();
-        //glMatrix.mat4.lookAt(camera.vMatrix, camera.eye, camera.center, camera.up);
+        // konfiguriert und setzt die globale Viewmatrix der Kamera (View Matrix)
+        setCameraViewMatrix();
 
+        // Alle Modelle durchlaufen, Eigenschaften für Rotation, Scale und Translation für das
+        // jeweils aktuelle Modell aktualisieren und das Modell ausgeben
         for (var i = 0; i < models.length; i++) {
-            // Update modelview for model.
-            updateTransformations(models[i]);
-
-            // Set uniforms for model.
-            WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.mvMatrixUniform, false, models[i].mvMatrix);
-
+            // Erstellt und setzt die Model Matrix für das aktuelle Modell nach den aktuell eingestellten Werten
+            setModelTransformationForModel(models[i]);
+            // Ausgabe des Modells
             drawModel(models[i]);
         }
     }
 
+    // Legt und setzt die Projektion Matrix nach dem gewählten Projektionstyp fest
+    function setCameraProjectionMatrix() {
+        let v = camera.lrtb;
+
+        // Erstellt die Projektionsmatrix auf Basis des in projectionType eingestellten Wertes
+        switch (camera.projectionType) {
+            case("ortho"):
+                glMatrix.mat4.ortho(camera.pMatrix, -v, v, -v, v, -10, 100);
+                break;
+            case("frustum"):
+                glMatrix.mat4.frustum(camera.pMatrix, -v / 2, v / 2, -v / 2, v / 2, 1, 100);
+                break;
+            case("perspective"):
+                glMatrix.mat4.perspective(camera.pMatrix, camera.fovy, camera.aspect, 1, 100);
+                break;
+        }
+
+        WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.projectionMatrix, false, camera.pMatrix);
+    }
+
+    // Legt und setzt die View Matrix fest
+    function setCameraViewMatrix() {
+        // Calculate x,z position/eye of camera orbiting the center.
+        var x = -10, z = -100;
+
+        camera.eye[x] = camera.center[x];
+        camera.eye[z] = camera.center[z];
+        camera.eye[x] += camera.distance * Math.sin(camera.zAngle);
+        camera.eye[z] += camera.distance * Math.cos(camera.zAngle);
+
+        glMatrix.mat4.identity(camera.vMatrix);
+        glMatrix.mat4.lookAt(camera.vMatrix, camera.eye, camera.center, camera.up);
+
+        WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.viewMatrix, false, camera.vMatrix);
+    }
+
+    // Erstellt und setzt die Model Matrix für das übergebene Modell
+    function setModelTransformationForModel(model) {
+        let mMatrix = model.modelMatrix;
+
+        glMatrix.mat4.identity(mMatrix);
+        // Scale
+        glMatrix.mat4.scale(mMatrix, mMatrix, model.scale);
+        // Rotate
+        glMatrix.mat4.rotate(mMatrix, mMatrix, 0.002, model.rotate);
+        // Translate.
+        glMatrix.mat4.translate(mMatrix, mMatrix, model.translate);
+
+        WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.modelMatrix, false, mMatrix);
+    }
+
+    // Gibt das übergebene Modell aus
     function drawModel(model) {
         WebGlInstance.webGL.gl.enableVertexAttribArray(aColor);
 
@@ -203,8 +311,8 @@ var app = (function () {
         }
     }
 
+    // API
     return {
         start: start
     }
-
 }());

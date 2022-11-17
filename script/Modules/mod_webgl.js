@@ -23,10 +23,14 @@ var WebGlInstance = (function () {
 
     function initUniforms() {
         // Projection Matrix.
-        webGL.program.pMatrixUniform = webGL.gl.getUniformLocation(webGL.program, "uPMatrix");
+        //webGL.program.pMatrixUniform = webGL.gl.getUniformLocation(webGL.program, "uPMatrix");
 
         // Model-View-Matrix.
-        webGL.program.mvMatrixUniform = webGL.gl.getUniformLocation(webGL.program, "uMVMatrix");
+        //webGL.program.mvMatrixUniform = webGL.gl.getUniformLocation(webGL.program, "uMVMatrix");
+
+        webGL.program.modelMatrix = webGL.gl.getUniformLocation(webGL.program, "uModel");
+        webGL.program.viewMatrix = webGL.gl.getUniformLocation(webGL.program, "uView");
+        webGL.program.projectionMatrix = webGL.gl.getUniformLocation(webGL.program, "uProjection");
     }
 
     /**
