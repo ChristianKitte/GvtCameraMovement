@@ -159,7 +159,7 @@ var app = (function () {
         } else if (activeModel === 4) {
             createModel("modTorus", [0, 0, 0], [0, 0, 0], [1, 1, 1]);
         } else if (activeModel === 5) {
-            //createModel("modRecursiveSphere");
+            createModel("modRecursiveSphere", [0, 0, 0], [0.0, 0.0, 0], [1, 1, 1]);
         }
     }
 
@@ -300,7 +300,6 @@ var app = (function () {
 
         WebGlInstance.webGL.gl.drawElements(WebGlInstance.webGL.gl.TRIANGLES, model.ibo.numerOfEmements, WebGlInstance.webGL.gl.UNSIGNED_SHORT, 0);
         if (showLine) {
-            // Indexarary für die Linien binden (eigentlich wechseln)
             WebGlInstance.webGL.gl.bufferData(WebGlInstance.webGL.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(model.verticesIndexLine), WebGlInstance.webGL.gl.STATIC_DRAW);
 
             model.ibo.numerOfEmements = model.verticesIndexLine.length;
