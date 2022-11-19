@@ -30,6 +30,9 @@ var app = (function () {
     document.addEventListener('keydown', (event) => {
         const keyName = event.key;
 
+        var deltaRotate = Math.PI / 36;
+        var deltaTranslate = 0.05;
+
         if (keyName === 'Control') {
             // do not alert when only Control key is pressed.
             return;
@@ -45,11 +48,11 @@ var app = (function () {
                 render();
                 break;
             case "ArrowLeft": // ==> links um die Szene
-
+                camera.zAngle += deltaRotate;
                 render();
                 break;
             case "ArrowRight": // ==> Rechts um die Szene
-
+                camera.zAngle -= deltaRotate;
                 render();
                 break;
 
@@ -65,7 +68,7 @@ var app = (function () {
                 break;
             case "f": // +y
                 camera.projectionType = "frustum";
-                projektionsText.innerText = "Frustum: ";
+                projektionsText.innerText = "Projektionstyp: Frustum";
                 render();
                 break;
 
@@ -159,7 +162,7 @@ var app = (function () {
         } else if (activeModel === 4) {
             createModel("modTorus", [0, 0, 0], [0, 0, 0], [1, 1, 1]);
         } else if (activeModel === 5) {
-            createModel("modRecursiveSphere", [0, 0, 0], [0.0, 0.0, 0], [1, 1, 1]);
+            createModel("modRecursiveSphere", [0, 0, 0], [0, 0, 0], [1, 1, 1]);
         }
     }
 
@@ -259,7 +262,7 @@ var app = (function () {
     // Legt und setzt die View Matrix fest
     function setCameraViewMatrix() {
         // Calculate x,z position/eye of camera orbiting the center.
-        var x = -10, z = -100;
+        var x = 0, z = 2;
 
         camera.eye[x] = camera.center[x];
         camera.eye[z] = camera.center[z];
@@ -280,7 +283,7 @@ var app = (function () {
         // Scale
         glMatrix.mat4.scale(mMatrix, mMatrix, model.scale);
         // Rotate
-        glMatrix.mat4.rotate(mMatrix, mMatrix, 0.002, model.rotate);
+        glMatrix.mat4.rotate(mMatrix, mMatrix, 0.92, model.rotate);
         // Translate.
         glMatrix.mat4.translate(mMatrix, mMatrix, model.translate);
 

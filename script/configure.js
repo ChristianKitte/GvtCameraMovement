@@ -12,7 +12,7 @@ var activeModel = 0;
  * Der Infotext für die Rekursiontiefe
  * @type {number}
  */
-var recursionDeep = 1;
+var currentRecursionDeep = 1;
 
 /**
  * Die Einstellung zur Anzeige des Gittergerüstes
@@ -50,8 +50,8 @@ document.getElementById("show-line").onchange = () => {
  * Setzt den Wert für die Rekursionstiefe der Kugel und initiiert das Neuzeichnen
  */
 document.getElementById("recursion-deep").oninput = () => {
-    recursionDeep = parseInt(document.getElementById("recursion-deep").value);
-    document.getElementById("recursion-value").innerText = "Rekursionstiefe: " + recursionDeep + " (Einstellen mit Schieberegler)";
+    currentRecursionDeep = parseInt(document.getElementById("recursion-deep").value);
+    document.getElementById("recursion-value").innerText = "Rekursionstiefe: " + currentRecursionDeep + " (Einstellen mit Schieberegler)";
     app.start();
 }
 

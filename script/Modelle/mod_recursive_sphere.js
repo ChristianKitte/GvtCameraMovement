@@ -1,18 +1,13 @@
 var modRecursiveSphere = (function () {
-    let recursiveVertex = 0;
-
     /**
-     * Kugel (Erzeugung mit parametrisierter Funktion)
+     * Kugel (rekursive Erzeugung)
      */
     function createModellVertex() {
         this.recursiveVertex = 0
         let recursiveVertex = this.recursiveVertex;
 
-        this.recursionDeep = 4;
+        this.recursionDeep = currentRecursionDeep;
         let recursionDeep = this.recursionDeep;
-
-        this.radius = 1
-        let radius = this.scale;
 
         this.scale = 100
         let scale = this.scale;
@@ -45,72 +40,108 @@ var modRecursiveSphere = (function () {
         this.verticesIndexTriangle = [];
         let verticesIndexTriangle = this.verticesIndexTriangle;
 
+        /**
+         * Ein Zähler für die Knoten.
+         * @type {number}
+         */
         let iVertex = 0;
 
-        createSeedVertices();
-        createSeedLines();
-        createSeedTriangles();
+        startRecusiveSphere();
 
-        if (recursionDeep >= 0) {
-            createRecrusiveSphere(recursionDeep);
+        // Definiert die anfänglichen Punkte eines Oktraeders als Seed. Für
+        // jede Dreiecksfläche wird hierbei die rekursive Erzeugungsfunktion
+        // aufgerufen.
+        function startRecusiveSphere() {
+            let v0 = [-1.0, 0.0, 0.0];    // 0
+            let v1 = [0.0, -1.0, 0.0];    // 1
+            let v2 = [1.0, 0.0, 0.0];     // 2
+            let v3 = [0.0, 1.0, 0.0];     // 3
+            let v4 = [0.0, 0.0, 1.0];     // 4
+            let v5 = [0.0, 0.0, -1.0];    // 5
+
+            // obere Dreiecke
+            createRecusiveSphere(v4, v3, v0, recursionDeep);
+            createRecusiveSphere(v4, v2, v3, recursionDeep);
+            createRecusiveSphere(v4, v1, v2, recursionDeep);
+            createRecusiveSphere(v4, v0, v1, recursionDeep);
+
+            // untere Dreiecke
+            createRecusiveSphere(v3, v5, v0, recursionDeep);
+            createRecusiveSphere(v2, v5, v3, recursionDeep);
+            createRecusiveSphere(v1, v5, v2, recursionDeep);
+            createRecusiveSphere(v0, v5, v1, recursionDeep);
         }
 
-        // Ausgehend von den Dreiecken des Seed rekursiv Dreiecke bis Rekusionstiefe = 0 erzeugen;
-        function createRecrusiveSphere(vertex1, vertex2, vertex3, rekursionDeep) {
+        // Ausgehend vom übergebenem Dreiecken werden recursiv jeweils vier neue Dreiecke
+        // bis zur Rekusionstiefe 0 erzeugt
+        function createRecusiveSphere(v1, v2, v3, curRecursionDeep) {
 
+            let v1norm = getNormalicedPoint(v1);
+            let v2norm = getNormalicedPoint(v2);
+            let v3norm = getNormalicedPoint(v3);
+
+            if (curRecursionDeep === 0) { // Ausgabe eines finalen Dreiecks
+                iv1 = createPoint(v1[0], v1[1], v1[2],);
+                iv2 = createPoint(v2[0], v2[1], v2[2],);
+                iv3 = createPoint(v3[0], v3[1], v3[2],);
+
+                createLine(iv1, iv2);
+                createLine(iv2, iv3);
+                createLine(iv3, iv1);
+
+                createSeedTriangle(iv1, iv2, iv3);
+            } else { // Start eines weiteren Rekursionsschrittes
+
+                let v12norm = getNormalicedPoint(getDividerPoint(v1norm, v2norm));
+                let v23norm = getNormalicedPoint(getDividerPoint(v2norm, v3norm));
+                let v31norm = getNormalicedPoint(getDividerPoint(v3norm, v1norm));
+
+                // 1-12-31
+                createRecusiveSphere(v1norm, v12norm, v31norm, curRecursionDeep - 1);
+                // 12-2-23
+                createRecusiveSphere(v12norm, v2norm, v23norm, curRecursionDeep - 1);
+                // 23-3-31
+                createRecusiveSphere(v23norm, v3norm, v31norm, curRecursionDeep - 1);
+                // 12-23-31
+                createRecusiveSphere(v12norm, v23norm, v31norm, curRecursionDeep - 1);
+            }
         }
 
-        // Definiert die Seed Dreiecke CCW
-        function createSeedTriangles() {
-            createSeedTriangle(0, 3, 4);
-            createSeedTriangle(3, 2, 4);
-            createSeedTriangle(2, 1, 4);
-            createSeedTriangle(1, 0, 4);
+        // Gibt auf Basis zweier Punkte (Ortsvektoren) den dazwischenliegenden, normierten
+        // Punkt (Ortsvektor) zurück
+        function getDividerPoint(v1, v2) {
+            let v12 = glMatrix.vec3.create();
 
-            createSeedTriangle(0, 5, 3);
-            createSeedTriangle(3, 5, 2);
-            createSeedTriangle(2, 5, 1);
-            createSeedTriangle(1, 5, 0);
+            glMatrix.vec3.add(v12, v1, v2);
+            glMatrix.vec3.scale(v12, v12, 0.5);
+
+            return getNormalicedPoint(v12);
         }
 
-        // Erzeugt Seed Dreieck
+        // Normalisiert den übergebenen Punkt / Ortsvektor
+        function getNormalicedPoint(v1) {
+            let vNorm = glMatrix.vec3.create();
+
+            glMatrix.vec3.normalize(vNorm, v1);
+
+            return vNorm;
+        }
+
+        // Erzeugt auf Basis der Indizes dreier Punkte ein Dreieck
         function createSeedTriangle(iVertex1, iVertex2, iVertex3) {
-            verticesIndexTriangle.push(iVertex3);
-            verticesIndexTriangle.push(iVertex2);
             verticesIndexTriangle.push(iVertex1);
+            verticesIndexTriangle.push(iVertex2);
+            verticesIndexTriangle.push(iVertex3);
         }
 
-        // Definiert die Seed Linien
-        function createSeedLines() {
-            createSeedLine(0, 1);
-            createSeedLine(1, 2);
-            createSeedLine(2, 3);
-            createSeedLine(3, 0);
-        }
-
-        // Erzeugt Seed Linien XZ Ebene und Y Achse
-        function createSeedLine(iVertex1, iVertex2) {
+        // Erzeugt auf Basis der Indizes zweier Punkte eine Linien
+        function createLine(iVertex1, iVertex2) {
             verticesIndexLine.push(iVertex1);
             verticesIndexLine.push(iVertex2);
-
-            verticesIndexLine.push(iVertex1);
-            verticesIndexLine.push(4);
-
-            verticesIndexLine.push(iVertex1);
-            verticesIndexLine.push(5);
         }
 
-        // Definiert die Seed Punkte
-        function createSeedVertices() {
-            createPoint(-1.0, 0.0, 0.0);    // 0
-            createPoint(0.0, -1.0, 0.0);    // 1
-            createPoint(1.0, 0.0, 0.0);     // 2
-            createPoint(0.0, 1.0, 0.0);     // 3
-            createPoint(0.0, 0.0, 1.0);     // 4
-            createPoint(0.0, 0.0, -1.0);    // 5
-        }
-
-        // Erzeugt einen konkreten Punkt mit Farbe und Normale
+        // Erzeugt auf Basis der Koordinatem einen konkreten Punkt mit
+        // Farbe und Normale
         function createPoint(x, y, z) {
             iVertex++;
 
@@ -131,7 +162,7 @@ var modRecursiveSphere = (function () {
 
             vertices.push(1.0, 1.0, 1.0); // Normale
 
-            return iVertex;
+            return iVertex - 1;
         }
     }
 

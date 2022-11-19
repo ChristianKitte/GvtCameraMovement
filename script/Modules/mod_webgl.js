@@ -89,7 +89,7 @@ var WebGlInstance = (function () {
 
         // Polygon offset of rastered Fragments.
         webGL.gl.enable(webGL.gl.POLYGON_OFFSET_FILL);
-        webGL.gl.polygonOffset(0.5, 0);
+        webGL.gl.polygonOffset(5, 5);
 
         webGL.gl.useProgram(webGL.program);
     }

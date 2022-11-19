@@ -3,6 +3,10 @@ body {
     margin-left: 2%;
 }
 
+a {
+    font-size: smaller;
+}
+
 #layout {
     margin: 4px;
     display: flex;
@@ -53,6 +57,6 @@ canvas {
     padding-left: 5px;
     padding-right: 5px;
 
-    width: 25%;
-    height: 25%;
+    width: 50%;
+    height: 50 zzz%;
 }
