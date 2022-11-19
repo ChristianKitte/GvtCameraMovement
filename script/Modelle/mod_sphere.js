@@ -1,3 +1,7 @@
+/**
+ * Erzeugung einer Kugel mit Hilfe einer parametrisierten Funktion
+ * @type {{createModellVertex: createModellVertex}}
+ */
 var modSphere = (function () {
     /**
      * Zur vereinfachten Nutzung und als kleine Optimierung
@@ -6,7 +10,7 @@ var modSphere = (function () {
     const pi = Math.PI;
 
     /**
-     * Kugel (Erzeugung mit parametrisierter Funktion)
+     * Erzeugt alle Vertices (Punkte), deren Indizes, die benötigten Linien sowie Dreiecke
      */
     function createModellVertex() {
         /**
@@ -107,6 +111,9 @@ var modSphere = (function () {
         }
     }
 
+    /**
+     * Legt die Funktionalität offen
+     */
     return {
         createModellVertex: createModellVertex
     }

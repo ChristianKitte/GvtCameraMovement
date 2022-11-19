@@ -3,9 +3,7 @@
  * @type {string}
  */
 const vertexShader = `#version 300 es  
-    //uniform mat4 uPMatrix;
-    //uniform mat4 uMVMatrix;
-    
+   
     uniform mat4 uModel;
     uniform mat4 uView;
     uniform mat4 uProjection;
@@ -22,19 +20,10 @@ const vertexShader = `#version 300 es
     vec3 normal;
     
     void main()
-    {
-        // Kreuzprodukt ist 0 <> Orthongonalität <> stehen senkrecht aufeinander
-        // Auf 0 setzen, wenn das Kreuzprodukt negativ ist
-        //normal=normalize(aNormal);
-        
+    {       
         vBrightness = max(dot(lightDirection, aNormal),0.0);
-        //vBrightness = 0.5;
         vColor = aColor;
         
-        
-        //vColor = vec4(normal.z, normal.z, normal.z, 1);
-        
-        //gl_Position=uPMatrix * uMVMatrix * vec4(aPosition, 100.0);
         gl_Position=uProjection * uView * uModel * vec4(aPosition, 100.0);
         gl_PointSize=1.0;       
     }
@@ -55,18 +44,8 @@ const fragmentShader = `#version 300 es
     out vec4 fragColor;
 
     void main()
-    {       
-        // Ambient Lightning
-        //fragColor= (vColor * 0.2) + (vColor * vBrightness * 0.6);
-        
-        // nur Helligkeit ohne Umgebungslicht
-        //fragColor= (vColor * 0.2) + (vColor * vBrightness * 0.8);
-        
-        // vBrightness is vec3 ==> Alpha muss neu gesetzt werden
-        //fragColor.a = 1.0;
-        
-        fragColor=vColor;
-        //fragColor.a=1.0;
+    {              
+        fragColor=vColor;        
     }
     `;
 

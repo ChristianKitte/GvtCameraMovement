@@ -1,6 +1,19 @@
+/**
+ * Das Hauptmodul der Anwendung. Es steuert die Ausgabe der Modelle sowie deren Erzeugung und
+ * ermöglciht eine Interaktion
+ * @type {{start: start}}
+ */
 var app = (function () {
+    /**
+     * Eine Kollektion der aktuell auszugebenden Modelle
+     * @type {*[]}
+     */
     let models = [];
 
+    /**
+     * Definiert eine virtuelle Kamera
+     * @type {{eye: number[], distance: number, lrtb: number, vMatrix: mat4, center: number[], projectionType: string, up: number[], fovy: number, pMatrix: mat4, zAngle: number}}
+     */
     let camera = {
         // Initial position of the camera.
         eye: [0, 1, 4],
@@ -27,6 +40,10 @@ var app = (function () {
         distance: 14,
     };
 
+    /**
+     * Handelt die berücksichtigten Tastatureingaben aus und führt die notwendige Änderungen
+     * aus
+     */
     document.addEventListener('keydown', (event) => {
         const keyName = event.key;
 
@@ -133,10 +150,16 @@ var app = (function () {
 
     }, false);
 
+    /**
+     * Startet die Initiierung des Moduls
+     */
     function start() {
         init();
     }
 
+    /**
+     * Führ die notwendigen Initialisierungsschritt aus
+     */
     function init() {
         models = [];
 
@@ -147,6 +170,10 @@ var app = (function () {
         render();
     }
 
+    /**
+     * Definiert Szenen, in dem es auf Basis des Paramters activeModel (configure.js) ein oder mehr Modelle erzeugt und
+     * zur Kollektion models hinhzufügt.
+     */
     function initModels() {
         if (activeModel === 0) {
             createModel("modCylinder", [0, -2, 0], [0, 0, 0], [1, 1, 1]);
@@ -166,6 +193,15 @@ var app = (function () {
         }
     }
 
+    /**
+     * Steuert die Erzeugung eines Modells indem es für das geforderte Modell alle notwendigen
+     * Initiierungen vornimmt (iniDataAndBuffer sowie iniTransformations). Das fertige Modell
+     * wird in die Kollektion models eingefügt.
+     * @param modelName Der Modelname
+     * @param translate Die Translation (3D Vektor)
+     * @param rotate Die Rotation (3D Vektor)
+     * @param scale Die Skalierung (3D Vektor)
+     */
     function createModel(modelName, translate, rotate, scale) {
         let model = {};
 
@@ -175,6 +211,12 @@ var app = (function () {
         models.push(model);
     }
 
+    /**
+     * Initiiert die Daten und Buffer. Hierbei definiert der Modellname ein Modell anhand seiner Klasse. Dies Modell
+     * wird aus den verfügbaren Modellen erzeugt und dessen Vorgaben in das übergebenen Modell übergeben.
+     * @param model Das zu initiierende Modell
+     * @param modelName Das aus eienm Modul erzeugte Modell (Verzeichnis Modelle)
+     */
     function initDataAndBuffers(model, modelName) {
         this[modelName]['createModellVertex'].apply(model);
 
@@ -205,8 +247,14 @@ var app = (function () {
         WebGlInstance.webGL.gl.vertexAttribPointer(aNormal, 3, WebGlInstance.webGL.gl.FLOAT, false, 10 * 4, 7 * 4);
     }
 
-    // Dem Modell Eigenschaften für Translate, Rotate und Scale Vector
-    // sowie für Model, View Scale Matrix hinzufügen
+    /**
+     * Fügt dem übertgebenen Modell Eigenschaften für Translate, Rotate und Scale Vector sowie für Model, View
+     * Scale Matrix hinzufügen
+     * @param model Das Modell
+     * @param translate Wert für Verschiebung
+     * @param rotate Wert für die Rotation
+     * @param scale Wert für die Skalierung
+     */
     function initTransformations(model, translate, rotate, scale) {
         model.translate = translate;
         model.rotate = rotate;
@@ -217,8 +265,10 @@ var app = (function () {
         model.scaleMatrix = glMatrix.mat4.create();
     }
 
-    // Konfiguriert und setzt die Matrizen für Model, View und Projektion und gibt die hinterlegten
-    // Modelle aus
+    /**
+     * Konfiguriert und setzt die Matrizen für Model, View und Projektion und Triggert die
+     * Ausgabe der aktuellen Modelle einer Szene
+     */
     function render() {
         // Löschen der alten Ausgabe
         WebGlInstance.webGL.gl.clear(WebGlInstance.webGL.gl.COLOR_BUFFER_BIT | WebGlInstance.webGL.gl.DEPTH_BUFFER_BIT);
@@ -239,7 +289,9 @@ var app = (function () {
         }
     }
 
-    // Legt und setzt die Projektion Matrix nach dem gewählten Projektionstyp fest
+    /**
+     * Legt und setzt die Projektion Matrix nach dem gewählten Projektionstyp fest
+     */
     function setCameraProjectionMatrix() {
         let v = camera.lrtb;
 
@@ -259,7 +311,9 @@ var app = (function () {
         WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.projectionMatrix, false, camera.pMatrix);
     }
 
-    // Legt und setzt die View Matrix fest
+    /**
+     * Legt und setzt die View Matrix fest
+     */
     function setCameraViewMatrix() {
         // Calculate x,z position/eye of camera orbiting the center.
         var x = 0, z = 2;
@@ -275,7 +329,10 @@ var app = (function () {
         WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.viewMatrix, false, camera.vMatrix);
     }
 
-    // Erstellt und setzt die Model Matrix für das übergebene Modell
+    /**
+     * Erstellt und setzt die Model Matrix für das übergebene Modell
+     * @param model Das Model
+     */
     function setModelTransformationForModel(model) {
         let mMatrix = model.modelMatrix;
 
@@ -290,7 +347,10 @@ var app = (function () {
         WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.modelMatrix, false, mMatrix);
     }
 
-    // Gibt das übergebene Modell aus
+    /**
+     * Gibt das übergebene Modell aus
+     * @param model Das Model
+     */
     function drawModel(model) {
         WebGlInstance.webGL.gl.enableVertexAttribArray(aColor);
 
@@ -313,7 +373,9 @@ var app = (function () {
         }
     }
 
-    // API
+    /**
+     * Die offengelegte API
+     */
     return {
         start: start
     }

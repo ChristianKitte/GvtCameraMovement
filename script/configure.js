@@ -12,7 +12,7 @@ var activeModel = 0;
  * Der Infotext für die Rekursiontiefe
  * @type {number}
  */
-var currentRecursionDeep = 1;
+var currentRecursionDeep = 0;
 
 /**
  * Die Einstellung zur Anzeige des Gittergerüstes
@@ -110,7 +110,7 @@ document.getElementById("figure0").onclick = () => {
 }
 
 /**
- * Zeigt die 1.Figur an
+ * Zeigt die 2.Figur an
  */
 document.getElementById("figure1").onclick = () => {
     activeModel = 1;
@@ -119,7 +119,7 @@ document.getElementById("figure1").onclick = () => {
 }
 
 /**
- * Zeigt die 2.Figur an
+ * Zeigt die 3.Figur an
  */
 document.getElementById("figure2").onclick = () => {
     activeModel = 2;
@@ -128,7 +128,7 @@ document.getElementById("figure2").onclick = () => {
 }
 
 /**
- * Zeigt die 3.Figur an
+ * Zeigt die 4.Figur an
  */
 document.getElementById("figure3").onclick = () => {
     activeModel = 3;
@@ -137,7 +137,7 @@ document.getElementById("figure3").onclick = () => {
 }
 
 /**
- * Zeigt die 4.Figur an
+ * Zeigt die 5.Figur an
  */
 document.getElementById("figure4").onclick = () => {
     activeModel = 4;
@@ -146,7 +146,7 @@ document.getElementById("figure4").onclick = () => {
 }
 
 /**
- * Zeigt die 5.Figur an
+ * Zeigt die 6.Figur an
  */
 document.getElementById("figure5").onclick = () => {
     activeModel = 5;

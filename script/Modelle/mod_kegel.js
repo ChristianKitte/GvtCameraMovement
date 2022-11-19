@@ -1,3 +1,7 @@
+/**
+ * Das Modell eines Kegels
+ * @type {{createModellVertex: createModellVertex}}
+ */
 var modKegel = (function () {
     /**
      * Zur vereinfachten Nutzung und als kleine Optimierung
@@ -6,7 +10,7 @@ var modKegel = (function () {
     const pi = Math.PI;
 
     /**
-     * Kegel (Erzeugung mit parametrisierter Funktion)
+     * Erzeugt alle Vertices (Punkte), deren Indizes, die benötigten Linien sowie Dreiecke
      */
     function createModellVertex() {
         /**
@@ -112,6 +116,9 @@ var modKegel = (function () {
         }
     }
 
+    /**
+     * Legt die Funktionalität offen
+     */
     return {
         createModellVertex: createModellVertex
     }

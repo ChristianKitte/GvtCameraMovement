@@ -1,10 +1,24 @@
+/**
+ * Kapselt die Initziierung und Konfiguration von WebGL
+ * @type {{webGL: {}}}
+ */
 var WebGlInstance = (function () {
+    /**
+     * Die Klasse webGL
+     * @type {{}}
+     */
     let webGL = {};
 
+    /**
+     * Startet die Iniziierung von WebGL
+     */
     webGL.create = function () {
         iniWebGl();
     }
 
+    /**
+     * Iniziiert WebGL
+     */
     function iniWebGl() {
         /**
          * Der aktuell gültige WebGL Kontext
@@ -21,6 +35,9 @@ var WebGlInstance = (function () {
         initUniforms();
     }
 
+    /**
+     * Konfiguriert den Zugriff auf die verwendeten Uniform Variablen
+     */
     function initUniforms() {
         // Projection Matrix.
         //webGL.program.pMatrixUniform = webGL.gl.getUniformLocation(webGL.program, "uPMatrix");
@@ -94,6 +111,9 @@ var WebGlInstance = (function () {
         webGL.gl.useProgram(webGL.program);
     }
 
+    /**
+     * Legt das WebGL Objekt offen
+     */
     return {
         webGL: webGL
     }

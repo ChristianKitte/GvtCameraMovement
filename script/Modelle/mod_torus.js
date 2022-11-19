@@ -1,3 +1,7 @@
+/**
+ * Das Modell eines Torus
+ * @type {{createModellVertex: createModellVertex}}
+ */
 var modTorus = (function () {
     /**
      * Zur vereinfachten Nutzung und als kleine Optimierung
@@ -6,7 +10,7 @@ var modTorus = (function () {
     const pi = Math.PI;
 
     /**
-     * Kugel (Erzeugung mit parametrisierter Funktion)
+     * Erzeugt alle Vertices (Punkte), deren Indizes, die benötigten Linien sowie Dreiecke
      */
     function createModellVertex() {
         /**
@@ -102,6 +106,9 @@ var modTorus = (function () {
         }
     }
 
+    /**
+     * Legt die Funktionalität offen
+     */
     return {
         createModellVertex: createModellVertex
     }

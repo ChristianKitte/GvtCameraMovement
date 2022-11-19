@@ -1,3 +1,7 @@
+/**
+ * Das Modell eines Zylinders
+ * @type {{createModellVertex: createModellVertex}}
+ */
 var modCylinder = (function () {
     /**
      * Zur vereinfachten Nutzung und als kleine Optimierung
@@ -6,7 +10,7 @@ var modCylinder = (function () {
     const pi = Math.PI;
 
     /**
-     * Zylinder (Erzeugung mit parametrisierter Funktion)
+     * Erzeugt alle Vertices (Punkte), deren Indizes, die benötigten Linien sowie Dreiecke
      */
     function createModellVertex() {
         /**
@@ -101,6 +105,9 @@ var modCylinder = (function () {
         }
     }
 
+    /**
+     * Legt die Funktionalität offen
+     */
     return {
         createModellVertex: createModellVertex
     }
