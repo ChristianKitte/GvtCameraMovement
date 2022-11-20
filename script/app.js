@@ -36,6 +36,7 @@ var app = (function () {
         // Angle to Z-Axis for camera when orbiting the center
         // given in radian.
         zAngle: 0,
+        yAngle: 0,
         // Distance in XZ-Plane from center when orbiting.
         distance: 14,
     };
@@ -46,7 +47,7 @@ var app = (function () {
      */
     document.addEventListener('keydown', (event) => {
         const keyName = event.key;
-
+        event.preventDefault();
         var deltaRotate = Math.PI / 36;
         var deltaTranslate = 0.05;
 
@@ -57,11 +58,14 @@ var app = (function () {
 
         switch (keyName) {
             case "ArrowUp": // ==> nach oben über die Szene
-                camera.zAngle += Math.PI / 36;
+                //camera.zAngle += Math.PI / 36;
+                camera.yAngle += deltaRotate;
+                //camera.eye
                 render();
                 break;
             case "ArrowDown": // ==> nach unten über die Szene
-                camera.zAngle -= Math.PI / 36;
+                //camera.zAngle -= Math.PI / 36;
+                camera.yAngle += deltaRotate;
                 render();
                 break;
             case "ArrowLeft": // ==> links um die Szene
@@ -89,19 +93,19 @@ var app = (function () {
                 render();
                 break;
 
-            case "w": // +y
+            case "s": // +y
                 camera.center[1] = camera.center[1] - 0.5;
                 render();
                 break;
-            case "s": // -y
+            case "w": // -y
                 camera.center[1] = camera.center[1] + 0.5;
                 render();
                 break;
-            case "a": // -x
+            case "d": // -x
                 camera.center[0] = camera.center[0] + 0.5;
                 render();
                 break;
-            case "d": // x
+            case "a": // x
                 camera.center[0] = camera.center[0] - 0.5;
                 render();
                 break;
@@ -323,8 +327,12 @@ var app = (function () {
         camera.eye[x] += camera.distance * Math.sin(camera.zAngle);
         camera.eye[z] += camera.distance * Math.cos(camera.zAngle);
 
+        camera.eye[1] = camera.center[z];
+        camera.eye[1] += camera.distance * Math.sin(camera.yAngle);
+
         glMatrix.mat4.identity(camera.vMatrix);
         glMatrix.mat4.lookAt(camera.vMatrix, camera.eye, camera.center, camera.up);
+
 
         WebGlInstance.webGL.gl.uniformMatrix4fv(WebGlInstance.webGL.program.viewMatrix, false, camera.vMatrix);
     }
